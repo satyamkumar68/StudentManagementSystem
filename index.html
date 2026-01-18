@@ -560,15 +560,16 @@
             </div>
 
             <div class="cta-buttons">
-                <a href="#" class="btn btn-primary" target="_blank" id="githubLink">
+                <a href="https://github.com/YOUR_USERNAME/StudentManagementSystem" class="btn btn-primary"
+                    target="_blank" id="githubLink">
                     📦 View on GitHub
                 </a>
-                <a href="#" class="btn btn-secondary" target="_blank" id="downloadLink">
-                    ⬇️ Download Project
+                <a href="README.md" class="btn btn-secondary" target="_blank">
+                    📖 Read Documentation
                 </a>
             </div>
-            <p style="color: white; margin-top: 15px; font-size: 0.9rem; opacity: 0.85;">
-                ⚠️ Update your GitHub username in the repository settings after publishing
+            <p style="color: white; margin-top: 15px; font-size: 0.9rem; opacity: 0.85;" id="localViewMessage">
+                💡 Viewing locally? All documentation links work! Click the cards below to explore.
             </p>
         </header>
 
@@ -657,9 +658,8 @@
                         IDE</li>
                 </ol>
                 <p style="text-align: center; margin-top: 25px;">
-                    <a href="#" target="_blank"
-                        style="color: var(--primary); font-weight: 600; text-decoration: none; font-size: 1.1rem;"
-                        id="docsLink">
+                    <a href="README.md" target="_blank"
+                        style="color: var(--primary); font-weight: 600; text-decoration: none; font-size: 1.1rem;">
                         📖 Read Full Documentation →
                     </a>
                 </p>
@@ -679,26 +679,26 @@
                 <h2>📚 Documentation</h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin: 25px 0;"
                     id="docLinks">
-                    <a href="#" target="_blank"
+                    <a href="README.md" target="_blank"
                         style="padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px; text-decoration: none; color: var(--primary); font-weight: 600; text-align: center; transition: all 0.3s ease;"
                         class="doc-link" data-file="README.md" onmouseover="this.style.transform='translateY(-5px)'"
                         onmouseout="this.style.transform='translateY(0)'">
                         📄 README
                     </a>
-                    <a href="#" target="_blank"
+                    <a href="QUICKSTART.md" target="_blank"
                         style="padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px; text-decoration: none; color: var(--primary); font-weight: 600; text-align: center; transition: all 0.3s ease;"
                         class="doc-link" data-file="QUICKSTART.md" onmouseover="this.style.transform='translateY(-5px)'"
                         onmouseout="this.style.transform='translateY(0)'">
                         ⚡ Quick Start
                     </a>
-                    <a href="#" target="_blank"
+                    <a href="VIVA_QUESTIONS.md" target="_blank"
                         style="padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px; text-decoration: none; color: var(--primary); font-weight: 600; text-align: center; transition: all 0.3s ease;"
                         class="doc-link" data-file="VIVA_QUESTIONS.md"
                         onmouseover="this.style.transform='translateY(-5px)'"
                         onmouseout="this.style.transform='translateY(0)'">
                         ❓ Interview Q&A
                     </a>
-                    <a href="#" target="_blank"
+                    <a href="PROJECT_STRUCTURE.md" target="_blank"
                         style="padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px; text-decoration: none; color: var(--primary); font-weight: 600; text-align: center; transition: all 0.3s ease;"
                         class="doc-link" data-file="PROJECT_STRUCTURE.md"
                         onmouseover="this.style.transform='translateY(-5px)'"
@@ -781,29 +781,28 @@
 
         // Auto-detect GitHub username from repository URL
         function updateGitHubLinks() {
-            let username = '';
-
             // If hosted on GitHub Pages, extract username from URL
             if (window.location.hostname.includes('github.io')) {
-                username = window.location.hostname.split('.')[0];
+                const username = window.location.hostname.split('.')[0];
+                const repoName = 'StudentManagementSystem';
+
+                // Update GitHub links
+                document.getElementById('githubLink').href = `https://github.com/${username}/${repoName}`;
+                document.getElementById('githubProfile').href = `https://github.com/${username}`;
+
+                // Update documentation links to GitHub
+                document.querySelectorAll('.doc-link').forEach(link => {
+                    const file = link.getAttribute('data-file');
+                    link.href = `https://github.com/${username}/${repoName}/blob/main/${file}`;
+                });
+
+                // Update message
+                document.getElementById('localViewMessage').innerHTML =
+                    '⚠️ Hosted on GitHub Pages - Links point to repository';
             } else {
-                // Fallback for local testing
-                username = 'YOUR_USERNAME';
+                // Viewing locally - links already point to local files
+                console.log('Viewing locally - all documentation links work!');
             }
-
-            const repoName = 'StudentManagementSystem';
-
-            // Update all GitHub links
-            document.getElementById('githubLink').href = `https://github.com/${username}/${repoName}`;
-            document.getElementById('downloadLink').href = `https://github.com/${username}/${repoName}/archive/refs/heads/main.zip`;
-            document.getElementById('docsLink').href = `https://github.com/${username}/${repoName}#readme`;
-            document.getElementById('githubProfile').href = `https://github.com/${username}`;
-
-            // Update documentation links
-            document.querySelectorAll('.doc-link').forEach(link => {
-                const file = link.getAttribute('data-file');
-                link.href = `https://github.com/${username}/${repoName}/blob/main/${file}`;
-            });
         }
 
         // Run on page load
