@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Student Management System - Desktop application built with Java, Swing, MySQL, and JDBC">
+    <meta name="keywords" content="Java, Swing, MySQL, JDBC, Student Management, CRUD, Desktop Application">
+    <meta name="author" content="Satyam Kumar">
+    <title>Student Management System | Java Desktop Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .screenshot-section {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .screenshot-placeholder {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 60px;
+            margin: 20px 0;
+            border: 3px dashed #667eea;
+        }
+
+        .screenshot-placeholder p {
+            color: #667eea;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-links a:hover {
+            opacity: 0.8;
+        }
+
+        section {
+            margin: 40px 0;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .note strong {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Student Management System</h1>
+            <p class="tagline">Professional Desktop Application for Managing Student Records</p>
+
+            <div class="badges">
+                <span class="badge">☕ Java 22</span>
+                <span class="badge">🖼️ Swing GUI</span>
+                <span class="badge">🗄️ MySQL 8.0</span>
+                <span class="badge">🔌 JDBC</span>
+                <span class="badge">✅ CRUD Operations</span>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary" target="_blank" id="githubLink">
+                    📦 View on GitHub
+                </a>
+                <a href="#" class="btn btn-secondary" target="_blank" id="downloadLink">
+                    ⬇️ Download Project
+                </a>
+            </div>
+            <p style="color: white; margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                ⚠️ Update your GitHub username in the repository settings after publishing
+            </p>
+        </header>
+
+        <div class="main-content">
+            <section>
+                <h2>✨ Key Features</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">➕</div>
+                        <h3>Add Students</h3>
+                        <p>Easily add new student records with comprehensive validation</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👁️</div>
+                        <h3>View Records</h3>
+                        <p>Display all student data in an organized table format</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✏️</div>
+                        <h3>Update Data</h3>
+                        <p>Modify existing student information seamlessly</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🗑️</div>
+                        <h3>Delete Records</h3>
+                        <p>Remove student records with confirmation dialogs</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Search Function</h3>
+                        <p>Find students by roll number or name (partial match)</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✅</div>
+                        <h3>Input Validation</h3>
+                        <p>Email, phone, marks validation with error messages</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>🛠️ Technology Stack</h2>
+                <div class="tech-stack">
+                    <div class="tech-item">Java 22</div>
+                    <div class="tech-item">Swing GUI</div>
+                    <div class="tech-item">MySQL 8.0</div>
+                    <div class="tech-item">JDBC</div>
+                    <div class="tech-item">MVC Pattern</div>
+                    <div class="tech-item">DAO Pattern</div>
+                </div>
+            </section>
+
+            <section class="screenshot-section">
+                <h2>📸 Application Preview</h2>
+                <div class="screenshot-placeholder">
+                    <p>🖼️ Screenshot of the running application will be added here</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px; opacity: 0.7;">
+                        Take a screenshot of your app and replace this placeholder
+                    </p>
+                </div>
+            </section>
+
+            <section>
+                <div class="note">
+                    <strong>📌 Note:</strong> This is a desktop application built with Java Swing.
+                    To run it, you need to download the project, set up MySQL database, and run it locally.
+                    A web-based version is planned for future development.
+                </div>
+            </section>
+
+            <section>
+                <h2>🚀 How to Run</h2>
+                <ol style="line-height: 2; margin-left: 40px;">
+                    <li><strong>Prerequisites:</strong> Install Java JDK 8+, MySQL 8.0, and MySQL JDBC Driver</li>
+                    <li><strong>Clone Repository:</strong> Download or clone from GitHub</li>
+                    <li><strong>Setup Database:</strong> Run <code>database/setup.sql</code> in MySQL</li>
+                    <li><strong>Configure:</strong> Update database password in <code>DatabaseConnection.java</code>
+                    </li>
+                    <li><strong>Add JDBC Driver:</strong> Add mysql-connector-j JAR to classpath</li>
+                    <li><strong>Run:</strong> Execute <code>Main.java</code> in your IDE</li>
+                </ol>
+                <p style="text-align: center; margin-top: 20px;">
+                    <a href="#" target="_blank" style="color: #667eea; font-weight: 600;" id="docsLink">
+                        📖 Read Full Documentation →
+                    </a>
+                </p>
+            </section>
+
+            <section>
+                <h2>🎯 Design Patterns Used</h2>
+                <ul style="line-height: 2; margin-left: 40px;">
+                    <li><strong>Singleton Pattern:</strong> DatabaseConnection class ensures single instance</li>
+                    <li><strong>DAO Pattern:</strong> StudentDAO separates business logic from data access</li>
+                    <li><strong>MVC Pattern:</strong> Model (Student), View (StudentFrame), Controller (DAO)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>📚 Documentation</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;"
+                    id="docLinks">
+                    <a href="#" target="_blank"
+                        style="padding: 15px; background: #f5f7fa; border-radius: 10px; text-decoration: none; color: #667eea; font-weight: 600; text-align: center;"
+                        class="doc-link" data-file="README.md">
+                        📄 README
+                    </a>
+                    <a href="#" target="_blank"
+                        style="padding: 15px; background: #f5f7fa; border-radius: 10px; text-decoration: none; color: #667eea; font-weight: 600; text-align: center;"
+                        class="doc-link" data-file="QUICKSTART.md">
+                        ⚡ Quick Start
+                    </a>
+                    <a href="#" target="_blank"
+                        style="padding: 15px; background: #f5f7fa; border-radius: 10px; text-decoration: none; color: #667eea; font-weight: 600; text-align: center;"
+                        class="doc-link" data-file="VIVA_QUESTIONS.md">
+                        ❓ Interview Q&A
+                    </a>
+                    <a href="#" target="_blank"
+                        style="padding: 15px; background: #f5f7fa; border-radius: 10px; text-decoration: none; color: #667eea; font-weight: 600; text-align: center;"
+                        class="doc-link" data-file="PROJECT_STRUCTURE.md">
+                        🏗️ Architecture
+                    </a>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <h3>👨‍💻 Developed by Satyam Kumar</h3>
+            <div class="social-links">
+                <a href="#" target="_blank" id="githubProfile">🔗 GitHub</a>
+                <a href="https://linkedin.com/in/satyam-kumar" target="_blank">💼 LinkedIn</a>
+                <a href="mailto:satyamkudy@gmail.com">📧 Email</a>
+            </div>
+            <p style="margin-top: 20px; opacity: 0.8;">
+                Built with ❤️ using Java, Swing, MySQL & JDBC
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.7;">
+                © 2026 Satyam Kumar. All rights reserved.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Auto-detect GitHub username from repository URL
+        function updateGitHubLinks() {
+            let username = '';
+
+            // If hosted on GitHub Pages, extract username from URL
+            if (window.location.hostname.includes('github.io')) {
+                username = window.location.hostname.split('.')[0];
+            } else {
+                // Fallback for local testing
+                username = 'YOUR_USERNAME';
+            }
+
+            const repoName = 'StudentManagementSystem';
+
+            // Update all GitHub links
+            document.getElementById('githubLink').href = `https://github.com/${username}/${repoName}`;
+            document.getElementById('downloadLink').href = `https://github.com/${username}/${repoName}/archive/refs/heads/main.zip`;
+            document.getElementById('docsLink').href = `https://github.com/${username}/${repoName}#readme`;
+            document.getElementById('githubProfile').href = `https://github.com/${username}`;
+
+            // Update documentation links
+            document.querySelectorAll('.doc-link').forEach(link => {
+                const file = link.getAttribute('data-file');
+                link.href = `https://github.com/${username}/${repoName}/blob/main/${file}`;
+            });
+        }
+
+        // Run on page load
+        window.addEventListener('DOMContentLoaded', updateGitHubLinks);
+    </script>
+</body>
+
+</html>
