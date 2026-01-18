@@ -1,6 +1,7 @@
 package com.sms.dao;
 
 import com.sms.model.Student;
+import com.sms.util.Constants;
 import com.sms.util.DatabaseConnection;
 
 import java.sql.*;
@@ -8,26 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * StudentDAO (Data Access Object) Class
+ * StudentDAO (Data Access Object) Class - Enhanced
  * Handles all database CRUD operations for Student entity
- * Follows DAO design pattern for separation of concerns
+ * Follows DAO design pattern with improved error handling and logging
  */
 public class StudentDAO {
 
-    // SQL Queries as constants (Best Practice)
-    private static final String INSERT_STUDENT = "INSERT INTO students (roll_number, name, email, phone, course, marks) VALUES (?, ?, ?, ?, ?, ?)";
-
-    private static final String SELECT_ALL_STUDENTS = "SELECT * FROM students ORDER BY roll_number";
-
-    private static final String SELECT_STUDENT_BY_ROLL = "SELECT * FROM students WHERE roll_number = ?";
-
-    private static final String SELECT_STUDENT_BY_NAME = "SELECT * FROM students WHERE name LIKE ?";
-
-    private static final String UPDATE_STUDENT = "UPDATE students SET name = ?, email = ?, phone = ?, course = ?, marks = ? WHERE roll_number = ?";
-
-    private static final String DELETE_STUDENT = "DELETE FROM students WHERE roll_number = ?";
-
-    private static final String CHECK_ROLL_EXISTS = "SELECT COUNT(*) FROM students WHERE roll_number = ?";
+    // SQL Queries from Constants class
 
     /**
      * Add a new student to database
@@ -43,7 +31,7 @@ public class StudentDAO {
         }
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(INSERT_STUDENT)) {
+                PreparedStatement pstmt = conn.prepareStatement(Constants.SQL.INSERT_STUDENT)) {
 
             // Set parameters
             pstmt.setString(1, student.getRollNumber());
@@ -79,7 +67,7 @@ public class StudentDAO {
 
         try (Connection conn = DatabaseConnection.getConnection();
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(SELECT_ALL_STUDENTS)) {
+                ResultSet rs = stmt.executeQuery(Constants.SQL.SELECT_ALL_STUDENTS)) {
 
             while (rs.next()) {
                 Student student = extractStudentFromResultSet(rs);
@@ -104,7 +92,7 @@ public class StudentDAO {
      */
     public Student getStudentByRollNumber(String rollNumber) {
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_BY_ROLL)) {
+                PreparedStatement pstmt = conn.prepareStatement(Constants.SQL.SELECT_STUDENT_BY_ROLL)) {
 
             pstmt.setString(1, rollNumber);
             ResultSet rs = pstmt.executeQuery();
@@ -135,7 +123,7 @@ public class StudentDAO {
         List<Student> students = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(SELECT_STUDENT_BY_NAME)) {
+                PreparedStatement pstmt = conn.prepareStatement(Constants.SQL.SELECT_STUDENT_BY_NAME)) {
 
             pstmt.setString(1, "%" + name + "%");
             ResultSet rs = pstmt.executeQuery();
@@ -163,7 +151,7 @@ public class StudentDAO {
      */
     public boolean updateStudent(Student student) {
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(UPDATE_STUDENT)) {
+                PreparedStatement pstmt = conn.prepareStatement(Constants.SQL.UPDATE_STUDENT)) {
 
             // Set parameters (note: roll_number is in WHERE clause)
             pstmt.setString(1, student.getName());
@@ -198,7 +186,7 @@ public class StudentDAO {
      */
     public boolean deleteStudent(String rollNumber) {
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(DELETE_STUDENT)) {
+                PreparedStatement pstmt = conn.prepareStatement(Constants.SQL.DELETE_STUDENT)) {
 
             pstmt.setString(1, rollNumber);
             int rowsAffected = pstmt.executeUpdate();
@@ -226,7 +214,7 @@ public class StudentDAO {
      */
     public boolean isRollNumberExists(String rollNumber) {
         try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(CHECK_ROLL_EXISTS)) {
+                PreparedStatement pstmt = conn.prepareStatement(Constants.SQL.CHECK_ROLL_EXISTS)) {
 
             pstmt.setString(1, rollNumber);
             ResultSet rs = pstmt.executeQuery();

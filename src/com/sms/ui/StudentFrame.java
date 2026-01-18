@@ -2,9 +2,12 @@ package com.sms.ui;
 
 import com.sms.dao.StudentDAO;
 import com.sms.model.Student;
+import com.sms.util.Constants;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.util.List;
 
@@ -39,8 +42,8 @@ public class StudentFrame extends JFrame {
     private JTable studentTable;
     private DefaultTableModel tableModel;
 
-    // Table column names
-    private final String[] columnNames = { "Roll Number", "Name", "Email", "Phone", "Course", "Marks" };
+    // Table components
+    private TableRowSorter<DefaultTableModel> tableSorter;
 
     /**
      * Constructor - Initialize UI
@@ -56,11 +59,12 @@ public class StudentFrame extends JFrame {
      */
     private void initializeUI() {
         // Frame settings
-        setTitle("Student Management System");
-        setSize(1200, 700);
+        setTitle(Constants.Icons.STUDENT + "Student Management System");
+        setSize(Constants.Dimensions.WINDOW_WIDTH, Constants.Dimensions.WINDOW_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center on screen
         setLayout(new BorderLayout(10, 10));
+        getContentPane().setBackground(Constants.Colors.BACKGROUND);
 
         // Set Look and Feel
         try {
@@ -87,11 +91,11 @@ public class StudentFrame extends JFrame {
      */
     private JPanel createTopPanel() {
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(41, 128, 185));
-        panel.setPreferredSize(new Dimension(0, 60));
+        panel.setBackground(Constants.Colors.PRIMARY);
+        panel.setPreferredSize(new Dimension(0, Constants.Dimensions.HEADER_HEIGHT));
 
-        JLabel lblTitle = new JLabel("STUDENT MANAGEMENT SYSTEM");
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 28));
+        JLabel lblTitle = new JLabel(Constants.Icons.STUDENT + " STUDENT MANAGEMENT SYSTEM");
+        lblTitle.setFont(new Font(Constants.Fonts.FONT_FAMILY, Font.BOLD, Constants.Fonts.TITLE_SIZE));
         lblTitle.setForeground(Color.WHITE);
         panel.add(lblTitle);
 
@@ -123,13 +127,14 @@ public class StudentFrame extends JFrame {
     private JPanel createFormPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(new Color(41, 128, 185), 2),
-                "Student Details",
+                BorderFactory.createLineBorder(Constants.Colors.PRIMARY, 2),
+                Constants.Icons.STUDENT + " Student Details",
                 0,
                 0,
-                new Font("Arial", Font.BOLD, 16),
-                new Color(41, 128, 185)));
-        panel.setPreferredSize(new Dimension(400, 0));
+                new Font(Constants.Fonts.FONT_FAMILY, Font.BOLD, Constants.Fonts.HEADING_SIZE),
+                Constants.Colors.PRIMARY));
+        panel.setPreferredSize(new Dimension(Constants.Dimensions.FORM_PANEL_WIDTH, 0));
+        panel.setBackground(Constants.Colors.SURFACE);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 10, 8, 10);
@@ -191,10 +196,10 @@ public class StudentFrame extends JFrame {
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
 
-        btnAdd = createStyledButton("Add Student", new Color(46, 204, 113));
-        btnUpdate = createStyledButton("Update Student", new Color(52, 152, 219));
-        btnDelete = createStyledButton("Delete Student", new Color(231, 76, 60));
-        btnClear = createStyledButton("Clear Fields", new Color(149, 165, 166));
+        btnAdd = createStyledButton(Constants.Icons.ADD + "Add Student", Constants.Colors.SUCCESS);
+        btnUpdate = createStyledButton(Constants.Icons.UPDATE + "Update", Constants.Colors.INFO);
+        btnDelete = createStyledButton(Constants.Icons.DELETE + "Delete", Constants.Colors.DANGER);
+        btnClear = createStyledButton(Constants.Icons.CLEAR + "Clear", Constants.Colors.DISABLED);
 
         // Add action listeners
         btnAdd.addActionListener(e -> addStudent());
@@ -215,13 +220,14 @@ public class StudentFrame extends JFrame {
      */
     private JButton createStyledButton(String text, Color bgColor) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFont(new Font(Constants.Fonts.FONT_FAMILY, Font.BOLD, Constants.Fonts.LABEL_SIZE));
         button.setBackground(bgColor);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
-        button.setPreferredSize(new Dimension(0, 40));
+        button.setPreferredSize(new Dimension(0, Constants.Dimensions.BUTTON_HEIGHT));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
 
         // Hover effect
         button.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -243,31 +249,53 @@ public class StudentFrame extends JFrame {
     private JPanel createTablePanel() {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
         panel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(new Color(41, 128, 185), 2),
-                "Student Records",
+                BorderFactory.createLineBorder(Constants.Colors.PRIMARY, 2),
+                "📋 Student Records",
                 0,
                 0,
-                new Font("Arial", Font.BOLD, 16),
-                new Color(41, 128, 185)));
+                new Font(Constants.Fonts.FONT_FAMILY, Font.BOLD, Constants.Fonts.HEADING_SIZE),
+                Constants.Colors.PRIMARY));
+        panel.setBackground(Constants.Colors.SURFACE);
 
         // Create table model
-        tableModel = new DefaultTableModel(columnNames, 0) {
+        tableModel = new DefaultTableModel(Constants.Table.COLUMN_NAMES, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Make table read-only
             }
         };
 
-        // Create table
+        // Create table with sorting
         studentTable = new JTable(tableModel);
-        studentTable.setFont(new Font("Arial", Font.PLAIN, 13));
-        studentTable.setRowHeight(30);
-        studentTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        studentTable.getTableHeader().setBackground(new Color(41, 128, 185));
-        studentTable.getTableHeader().setForeground(Color.WHITE);
-        studentTable.setSelectionBackground(new Color(52, 152, 219));
-        studentTable.setSelectionForeground(Color.WHITE);
-        studentTable.setGridColor(new Color(189, 195, 199));
+        studentTable.setFont(new Font(Constants.Fonts.FONT_FAMILY, Font.PLAIN, Constants.Fonts.TABLE_CELL_SIZE));
+        studentTable.setRowHeight(Constants.Table.ROW_HEIGHT);
+        studentTable.getTableHeader()
+                .setFont(new Font(Constants.Fonts.FONT_FAMILY, Font.BOLD, Constants.Fonts.TABLE_HEADER_SIZE));
+        studentTable.getTableHeader().setBackground(Constants.Colors.TABLE_HEADER);
+        studentTable.getTableHeader().setForeground(Constants.Colors.TABLE_HEADER_TEXT);
+        studentTable.getTableHeader().setPreferredSize(new Dimension(0, Constants.Table.HEADER_HEIGHT));
+        studentTable.setSelectionBackground(Constants.Colors.TABLE_SELECTION);
+        studentTable.setSelectionForeground(Constants.Colors.TABLE_SELECTION_TEXT);
+        studentTable.setGridColor(Constants.Colors.TABLE_GRID);
+        studentTable.setShowGrid(true);
+        studentTable.setIntercellSpacing(new Dimension(1, 1));
+
+        // Add table sorting
+        tableSorter = new TableRowSorter<>(tableModel);
+        studentTable.setRowSorter(tableSorter);
+
+        // Alternating row colors
+        studentTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!isSelected) {
+                    c.setBackground(row % 2 == 0 ? Constants.Colors.TABLE_ROW_EVEN : Constants.Colors.TABLE_ROW_ODD);
+                }
+                return c;
+            }
+        });
 
         // Add selection listener
         studentTable.getSelectionModel().addListSelectionListener(e -> {
@@ -287,8 +315,8 @@ public class StudentFrame extends JFrame {
      */
     private JPanel createBottomPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        panel.setBackground(new Color(236, 240, 241));
-        panel.setPreferredSize(new Dimension(0, 60));
+        panel.setBackground(Constants.Colors.BACKGROUND);
+        panel.setPreferredSize(new Dimension(0, Constants.Dimensions.FOOTER_HEIGHT));
 
         JLabel lblSearch = new JLabel("Search:");
         lblSearch.setFont(new Font("Arial", Font.BOLD, 14));
@@ -299,8 +327,8 @@ public class StudentFrame extends JFrame {
                 BorderFactory.createLineBorder(new Color(189, 195, 199)),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-        btnSearch = createStyledButton("Search", new Color(155, 89, 182));
-        btnRefresh = createStyledButton("Refresh All", new Color(52, 73, 94));
+        btnSearch = createStyledButton(Constants.Icons.SEARCH + "Search", Constants.Colors.WARNING);
+        btnRefresh = createStyledButton(Constants.Icons.REFRESH + "Refresh All", Constants.Colors.PRIMARY_DARK);
 
         btnSearch.addActionListener(e -> searchStudent());
         btnRefresh.addActionListener(e -> loadStudentData());
@@ -374,14 +402,14 @@ public class StudentFrame extends JFrame {
             // Add to database
             if (studentDAO.addStudent(student)) {
                 JOptionPane.showMessageDialog(this,
-                        "Student added successfully!",
+                        Constants.Messages.STUDENT_ADDED,
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE);
                 clearFields();
                 loadStudentData();
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "Failed to add student. Roll number may already exist.",
+                        Constants.Messages.ERROR_ADD_FAILED,
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -400,7 +428,7 @@ public class StudentFrame extends JFrame {
     private void updateStudent() {
         if (txtRollNumber.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                    "Please select a student from the table to update.",
+                    Constants.Messages.ERROR_NO_SELECTION,
                     "No Selection",
                     JOptionPane.WARNING_MESSAGE);
             return;
@@ -421,14 +449,14 @@ public class StudentFrame extends JFrame {
 
             if (studentDAO.updateStudent(student)) {
                 JOptionPane.showMessageDialog(this,
-                        "Student updated successfully!",
+                        Constants.Messages.STUDENT_UPDATED,
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE);
                 clearFields();
                 loadStudentData();
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "Failed to update student.",
+                        Constants.Messages.ERROR_UPDATE_FAILED,
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -449,14 +477,14 @@ public class StudentFrame extends JFrame {
 
         if (rollNumber.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                    "Please select a student from the table to delete.",
+                    Constants.Messages.ERROR_NO_SELECTION,
                     "No Selection",
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         int confirm = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to delete student: " + rollNumber + "?",
+                Constants.Messages.CONFIRM_DELETE + rollNumber + "?",
                 "Confirm Delete",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);
@@ -464,14 +492,14 @@ public class StudentFrame extends JFrame {
         if (confirm == JOptionPane.YES_OPTION) {
             if (studentDAO.deleteStudent(rollNumber)) {
                 JOptionPane.showMessageDialog(this,
-                        "Student deleted successfully!",
+                        Constants.Messages.STUDENT_DELETED,
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE);
                 clearFields();
                 loadStudentData();
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "Failed to delete student.",
+                        Constants.Messages.ERROR_DELETE_FAILED,
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -486,7 +514,7 @@ public class StudentFrame extends JFrame {
 
         if (searchText.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                    "Please enter roll number or name to search.",
+                    Constants.Messages.ERROR_EMPTY_SEARCH,
                     "Empty Search",
                     JOptionPane.WARNING_MESSAGE);
             return;
@@ -513,7 +541,7 @@ public class StudentFrame extends JFrame {
 
             if (students.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                        "No students found matching: " + searchText,
+                        Constants.Messages.ERROR_NO_RESULTS + searchText,
                         "No Results",
                         JOptionPane.INFORMATION_MESSAGE);
                 loadStudentData();
@@ -562,7 +590,7 @@ public class StudentFrame extends JFrame {
                 txtMarks.getText().trim().isEmpty()) {
 
             JOptionPane.showMessageDialog(this,
-                    "All fields are required!",
+                    Constants.Messages.VALIDATION_ALL_REQUIRED,
                     "Validation Error",
                     JOptionPane.ERROR_MESSAGE);
             return false;
@@ -570,9 +598,9 @@ public class StudentFrame extends JFrame {
 
         // Validate email format
         String email = txtEmail.getText().trim();
-        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (!email.matches(Constants.Validation.EMAIL_PATTERN)) {
             JOptionPane.showMessageDialog(this,
-                    "Invalid email format!",
+                    Constants.Messages.VALIDATION_INVALID_EMAIL,
                     "Validation Error",
                     JOptionPane.ERROR_MESSAGE);
             return false;
@@ -580,9 +608,9 @@ public class StudentFrame extends JFrame {
 
         // Validate phone number
         String phone = txtPhone.getText().trim();
-        if (!phone.matches("\\d{10}")) {
+        if (!phone.matches(Constants.Validation.PHONE_PATTERN)) {
             JOptionPane.showMessageDialog(this,
-                    "Phone number must be 10 digits!",
+                    Constants.Messages.VALIDATION_INVALID_PHONE,
                     "Validation Error",
                     JOptionPane.ERROR_MESSAGE);
             return false;
@@ -591,16 +619,16 @@ public class StudentFrame extends JFrame {
         // Validate marks
         try {
             double marks = Double.parseDouble(txtMarks.getText().trim());
-            if (marks < 0 || marks > 100) {
+            if (marks < Constants.Validation.MIN_MARKS || marks > Constants.Validation.MAX_MARKS) {
                 JOptionPane.showMessageDialog(this,
-                        "Marks must be between 0 and 100!",
+                        Constants.Messages.VALIDATION_INVALID_MARKS,
                         "Validation Error",
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
-                    "Marks must be a valid number!",
+                    Constants.Messages.VALIDATION_INVALID_MARKS_FORMAT,
                     "Validation Error",
                     JOptionPane.ERROR_MESSAGE);
             return false;
